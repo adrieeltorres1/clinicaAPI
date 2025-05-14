@@ -1,0 +1,109 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model consultas {
+  consulta_id   Int          @id @unique(map: "consulta_id") @default(autoincrement())
+  consulta_data String       @db.VarChar(10)
+  status_id     Int
+  medico_id     Int
+  paciente_id   Int
+  plano_id      Int
+  status        status       @relation(fields: [status_id], references: [status_id], onUpdate: Restrict, map: "consultas_fk2")
+  medicos       medicos      @relation(fields: [medico_id], references: [medico_id], onUpdate: Restrict, map: "consultas_fk3")
+  pacientes     pacientes    @relation(fields: [paciente_id], references: [paciente_id], onUpdate: Restrict, map: "consultas_fk4")
+  planos        planos       @relation(fields: [plano_id], references: [plano_id], onUpdate: Restrict, map: "consultas_fk5")
+  pagamentos    pagamentos[]
+
+  @@index([status_id], map: "consultas_fk2")
+  @@index([medico_id], map: "consultas_fk3")
+  @@index([paciente_id], map: "consultas_fk4")
+  @@index([plano_id], map: "consultas_fk5")
+}
+
+model especialidades {
+  especialidade_id   Int       @id @unique(map: "especialidade_id") @default(autoincrement())
+  especialidade_nome String    @db.VarChar(50)
+  medicos            medicos[]
+}
+
+model exames {
+  exame_id    Int       @id @unique(map: "exame_id") @default(autoincrement())
+  exame_nome  String    @db.VarChar(100)
+  paciente_id Int
+  pacientes   pacientes @relation(fields: [paciente_id], references: [paciente_id], onUpdate: Restrict, map: "exames_fk2")
+
+  @@index([paciente_id], map: "exames_fk2")
+}
+
+model medicos {
+  medico_id        Int            @id @unique(map: "medico_id") @default(autoincrement())
+  medico_nome      String         @db.VarChar(100)
+  medico_crm       String         @db.VarChar(10)
+  medico_telefone  String         @db.VarChar(20)
+  medico_email     String         @db.VarChar(50)
+  especialidade_id Int
+  consultas        consultas[]
+  especialidades   especialidades @relation(fields: [especialidade_id], references: [especialidade_id], onUpdate: Restrict, map: "medicos_fk5")
+
+  @@index([especialidade_id], map: "medicos_fk5")
+}
+
+model operadoras {
+  operadora_id        Int      @id @unique(map: "operadora_id") @default(autoincrement())
+  operadora_nome      String   @db.VarChar(50)
+  operadora_cobertura String   @db.VarChar(100)
+  operadora_preco     Float    @db.Float
+  planos              planos[]
+}
+
+model pacientes {
+  paciente_id         Int         @id @unique(map: "paciente_id") @default(autoincrement())
+  paciente_nome       String      @db.VarChar(100)
+  paciente_genero     String      @db.VarChar(20)
+  paciente_nascimento String      @db.VarChar(10)
+  paciente_email      String?     @db.VarChar(50)
+  paciente_telefone   String      @db.VarChar(20)
+  consultas           consultas[]
+  exames              exames[]
+}
+
+model pagamentos {
+  pagamento_id     Int       @id @unique(map: "pagamento_id") @default(autoincrement())
+  pagamento_valor  Int
+  pagamento_data   String    @db.VarChar(10)
+  pagamento_status String    @db.VarChar(20)
+  pagamento_metodo String    @db.VarChar(20)
+  consulta_id      Int
+  consultas        consultas @relation(fields: [consulta_id], references: [consulta_id], onUpdate: Restrict, map: "pagamentos_fk5")
+
+  @@index([consulta_id], map: "pagamentos_fk5")
+}
+
+model planos {
+  plano_id     Int         @id @unique(map: "plano_id") @default(autoincrement())
+  plano_nome   String      @db.VarChar(50)
+  operadora_id Int
+  consultas    consultas[]
+  operadoras   operadoras  @relation(fields: [operadora_id], references: [operadora_id], onUpdate: Restrict, map: "planos_fk2")
+
+  @@index([operadora_id], map: "planos_fk2")
+}
+
+model status {
+  status_id   Int         @id @unique(map: "status_id") @default(autoincrement())
+  status_nome String      @db.VarChar(20)
+  consultas   consultas[]
+}
+
+model usuarios {
+  usuario_id    Int    @id @unique(map: "usuario_id") @default(autoincrement())
+  usuario_nome  String? @db.VarChar(20)
+  usuario_email String @db.VarChar(50) @unique
+  usuario_senha String @db.VarChar(255)
+}
