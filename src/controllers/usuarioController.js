@@ -81,12 +81,12 @@ async function getUsers() {
     }
 }
 
-async function deletaUmUsuario(id) {
+async function deletaUmUsuario(nome) {
     return await prisma.usuarios.delete({
         where: {
-            usuario_name: nome
+            usuario_nome: nome 
         }
-    })
+    });
 }
 
 module.exports = {

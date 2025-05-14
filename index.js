@@ -23,7 +23,6 @@ app.get("/boas-vindas", (req, res) => {
 
 app.use("/especialidades", especialidadeRoutes);
 app.use("/usuarios", usuarioRoutes);
-console.log(usuarioRoutes);
 
 
 app.get("/boas-vindas/:nome", (req, res) => {

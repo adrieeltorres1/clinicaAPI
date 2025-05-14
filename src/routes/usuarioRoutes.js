@@ -15,9 +15,17 @@ router.get("/", async (req, res) => {
     res.send(await getUsers());
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/", async (req, res) => {
     try {
-        const resultado = await deletaUmUsuario(req.params.id);
+        const { nome } = req.body; // Pegando o nome do usuário no body
+        if (!nome) {
+            return res.status(400).json({
+                type: "error",
+                message: "Nome do usuário não fornecido!"
+            });
+        }
+
+        const resultado = await deletaUmUsuario(nome);
         res.json({
             type: "success",
             message: "Usuário deletado com sucesso!",
@@ -30,6 +38,7 @@ router.delete("/:id", async (req, res) => {
         });
     }
 });
+
 
 
 module.exports = router;
