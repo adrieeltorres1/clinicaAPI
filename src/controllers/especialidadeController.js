@@ -21,12 +21,15 @@ async function criaUmaEspecialidade(dados) {
 
 async function editaUmaEspecialidade(dados, id) {
     return await prisma.especialidades.update({
-        data: dados,
+        data: {
+            especialidade_nome: dados.especialidade_nome
+        },
         where: {
-            especialidade_id: Number(id)
+            especialidade_id: Number(id)  
         }
-    })
+    });
 }
+
 
 async function deletaUmaEspecialidade(id) {
     return await prisma.especialidades.delete({

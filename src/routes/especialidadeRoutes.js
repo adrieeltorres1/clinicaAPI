@@ -12,9 +12,17 @@ router.get("/:id", async (req, res) => {
 router.post("/", async (req, res) => {
     res.send(await criaUmaEspecialidade(req.body));
 });
+
 router.put("/:id", async (req, res) => {
-    res.send(await editaUmaEspecialidade(req.body, req.params.id));
+    try {
+        const especialidadeAtualizada = await editaUmaEspecialidade(req.body, req.params.id);
+        res.json(especialidadeAtualizada);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error:"Erro ao editar especialidade" });
+    }
 });
+
 router.delete("/:id", async (req, res) => {
     res.send(await deletaUmaEspecialidade(req.params.id));
 });
