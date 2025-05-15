@@ -11,8 +11,9 @@ async function criarUsuario(dados) {
             where: {
                 usuario_email: dados.usuario_email
             }
-        })
 
+        })
+        
         if (checarEmail > 0) {
             throw new Error("Este email já está cadastrado!");
         }
@@ -37,6 +38,8 @@ async function criarUsuario(dados) {
             message: error.message
         }
     }
+    
+
 }
 
 async function login(dados) {
@@ -84,7 +87,7 @@ async function getUsers() {
 async function deletaUmUsuario(nome) {
     return await prisma.usuarios.delete({
         where: {
-            usuario_nome: nome 
+            usuario_nome: nome
         }
     });
 }

@@ -1,3 +1,4 @@
+const { Router } = require('express');
 const { criarUsuario, login, getUsers, deletaUmUsuario } = require('../controllers/usuarioController');
 const { safeMode } = require('../utils');
 
@@ -17,7 +18,7 @@ router.get("/", async (req, res) => {
 
 router.delete("/", async (req, res) => {
     try {
-        const { nome } = req.body; // Pegando o nome do usuário no body
+        const { nome } = req.body;
         if (!nome) {
             return res.status(400).json({
                 type: "error",
