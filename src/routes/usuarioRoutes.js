@@ -1,5 +1,7 @@
 const { Router } = require('express');
 const { criarUsuario, login, getUsers, deletaUmUsuario } = require('../controllers/usuarioController');
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
 const { safeMode } = require('../utils');
 
 const router = require('express').Router();
@@ -16,28 +18,31 @@ router.get("/", async (req, res) => {
     res.send(await getUsers());
 });
 
-router.delete("/", async (req, res) => {
-    try {
-        const { nome } = req.body;
-        if (!nome) {
-            return res.status(400).json({
-                type: "error",
-                message: "Nome do usuário não fornecido!"
-            });
-        }
+router.delete("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
 
-        const resultado = await deletaUmUsuario(nome);
-        res.json({
-            type: "success",
-            message: "Usuário deletado com sucesso!",
-            data: resultado
-        });
-    } catch (error) {
-        res.status(500).json({
-            type: "error",
-            message: error.message
-        });
+    const resultado = await prisma.usuarios.delete({
+      where: { usuario_id: Number(id) }
+    });
+
+    res.json({
+      success: true,
+      message: "Usuário deletado com sucesso",
+      data: { id: resultado.usuario_id }
+    });
+
+  } catch (error) {
+    if (error.code === "P2025") {
+      return res.status(404).json({ 
+        error: "Usuário não encontrado" 
+      });
     }
+    res.status(500).json({ 
+      error: "Erro interno",
+      details: error.message 
+    });
+  }
 });
 
 
