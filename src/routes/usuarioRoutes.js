@@ -45,6 +45,38 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
+router.put("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { nome, email } = req.body;
+
+    const usuarioAtualizado = await prisma.usuarios.update({
+      where: { usuario_id: Number(id) },
+      data: { 
+        usuario_nome: nome, 
+        usuario_email: email 
+      },
+    });
+
+    res.json({
+      success: true,
+      message: "Usuário atualizado com sucesso",
+      data: usuarioAtualizado
+    });
+
+  } catch (error) {
+    if (error.code === "P2025") {
+      return res.status(404).json({ 
+        error: "Usuário não encontrado" 
+      });
+    }
+    res.status(500).json({ 
+      error: "Erro ao atualizar usuário",
+      details: error.message 
+    });
+  }
+});
+
 
 
 module.exports = router;

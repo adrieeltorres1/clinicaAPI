@@ -91,10 +91,17 @@ async function deletaUmUsuario(nome) {
         }
     });
 }
+async function atualizaUsuario(id, novosDados) {
+  return await prisma.usuarios.update({
+    where: { usuario_id: Number(id) },
+    data: novosDados,
+  });
+}
 
 module.exports = {
     criarUsuario,
     login,
     getUsers,
-    deletaUmUsuario
+    deletaUmUsuario,
+    atualizaUsuario
 }
