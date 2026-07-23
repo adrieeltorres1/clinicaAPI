@@ -8,7 +8,7 @@ async function buscarEspecialidades(){
 async function buscaUmaEspecialidade(id) {
     return await prisma.especialidades.findFirst({
         where: { 
-            especialidade_id: Number(id)
+            id_especialidade: Number(id)
         }
     });
 }
@@ -22,19 +22,18 @@ async function criaUmaEspecialidade(dados) {
 async function editaUmaEspecialidade(dados, id) {
     return await prisma.especialidades.update({
         data: {
-            especialidade_nome: dados.especialidade_nome
+            nome_especialidade: dados.nome_especialidade
         },
         where: {
-            especialidade_id: Number(id)  
+            id_especialidade: Number(id)  
         }
     });
 }
 
-
 async function deletaUmaEspecialidade(id) {
     return await prisma.especialidades.delete({
         where: {
-            especialidade_id: Number(id)
+            id_especialidade: Number(id)
         }
     })
 }
