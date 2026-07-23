@@ -5,12 +5,15 @@ const port = 8000;
 
 // importando rotas
 const especialidadeRoutes = require("./src/routes/especialidadeRoutes");
+const medicoRoutes = require("./src/routes/medicoRoutes");       // ADICIONAR
+const pacienteRoutes = require("./src/routes/pacienteRoutes");   // ADICIONAR
+const planoRoutes = require("./src/routes/planoRoutes");
 const usuarioRoutes = require("./src/routes/usuarioRoutes");
 
 
 // middlewares = interceptadores
-app.use(express.json()); // converte o corpo da requisição em json
-app.use(cors()); // liberar requisições que vierem de outro domínio
+app.use(express.json());
+app.use(cors());
 
 // routes/endpoints = rotas 
 app.get("/", (req, res) => {
@@ -22,6 +25,9 @@ app.get("/boas-vindas", (req, res) => {
 });
 
 app.use("/especialidades", especialidadeRoutes);
+app.use("/medicos", medicoRoutes);      
+app.use("/pacientes", pacienteRoutes);  
+app.use("/planos", planoRoutes);
 app.use("/usuarios", usuarioRoutes);
 
 
